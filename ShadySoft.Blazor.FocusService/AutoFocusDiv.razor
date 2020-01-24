@@ -1,0 +1,24 @@
+﻿@inject FocusService _focusService
+
+<div @attributes="AdditionalAttributes">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public Func<ElementReference> FocusElementFunc { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object> AdditionalAttributes { get; set; } = new Dictionary<string, object>();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await _focusService.SetFocusAsync(FocusElementFunc());
+
+        base.OnAfterRender(firstRender);
+    }
+}
